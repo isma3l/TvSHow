@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TvShow</string>
+    <string name="details">Details </string>
+
+    <string name="description_show_info">image_show_info</string>
+    <string name="description_detail_main">image_detail_main</string>
+    <string name="popularity">Popularity:</string>
+    <string name="cast">Program Cast</string>
+    <string name="real_name">Real name:</string>
+    <string name="character_name">Character name:</string>
+
+    <string name="wait">Espere un momento...</string>
+</resources>
