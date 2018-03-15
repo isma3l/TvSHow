@@ -18,6 +18,9 @@ import java.util.List;
  */
 
 public class TvShowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int VIEW_TYPE_ITEM = 0;
+    private static final int VIEW_TYPE_LOADING = 1;
+
     private Context context;
     private List<TVShowInfo> tvShowInfos;
     private TvShowListener tvShowListener;
@@ -30,8 +33,13 @@ public class TvShowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tv_show_info, parent, false);
-        return new TvShowViewHolder(view);
+        if (viewType == VIEW_TYPE_ITEM) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tv_show_info, parent, false);
+            return new TvShowViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_footer, parent, false);
+            return new RecyclerView.ViewHolder(view) {};
+        }
     }
 
     @Override
@@ -62,6 +70,10 @@ public class TvShowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return tvShowInfos.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return tvShowInfos.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
 
     public class TvShowViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView image;

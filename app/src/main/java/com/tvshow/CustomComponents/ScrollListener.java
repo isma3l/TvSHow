@@ -1,4 +1,4 @@
-package com.tvshow.utils;
+package com.tvshow.CustomComponents;
 
 /**
  * Created by ismael on 15/03/18.
@@ -14,7 +14,7 @@ public abstract class ScrollListener extends RecyclerView.OnScrollListener {
     private boolean isLoading;
     private int visibleThreshold;
     private int lastVisibleItem, totalItemCount;
-    private static final int VISIBLE = 5;
+    private static final int VISIBLE = 2;
     private RecyclerView.LayoutManager genericLayoutManager;
 
     public ScrollListener(LinearLayoutManager linearLayoutManager){

@@ -19,9 +19,7 @@ import com.tvshow.adapters.CastAdapter;
 import com.tvshow.model.Character;
 import com.tvshow.model.TVShow;
 import com.tvshow.model.TVShowInfo;
-import com.tvshow.network.response.ErrorUtils;
 import com.tvshow.network.response.ResponseCast;
-import com.tvshow.network.response.ResponseError;
 import com.tvshow.network.service.ApiService;
 import com.tvshow.network.service.ApiUtils;
 
@@ -125,15 +123,12 @@ public class DetailTvSHowActivity extends AppCompatActivity {
                 if(response.isSuccessful()) {
                     List<Character> list = response.body().getCast();
                     processCast(list);
-                }  else {
-                    ResponseError error = ErrorUtils.parseError(response);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseCast> call, Throwable t) {
                 progressDialog.dismiss();
-
             }
         });
     }

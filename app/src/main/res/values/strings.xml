@@ -8,6 +8,5 @@
     <string name="cast">Program Cast</string>
     <string name="real_name">Real name:</string>
     <string name="character_name">Character name:</string>
-
-    <string name="wait">Espere un momento...</string>
+    <string name="wait">Wait a moment...</string>
 </resources>

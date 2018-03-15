@@ -16,12 +16,10 @@ import com.google.gson.Gson;
 import com.tvshow.R;
 import com.tvshow.adapters.TvShowAdapter;
 import com.tvshow.model.TVShowInfo;
-import com.tvshow.network.response.ErrorUtils;
-import com.tvshow.network.response.ResponseError;
 import com.tvshow.network.response.ResponseTvShows;
 import com.tvshow.network.service.ApiService;
 import com.tvshow.network.service.ApiUtils;
-import com.tvshow.utils.ScrollListener;
+import com.tvshow.CustomComponents.ScrollListener;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -50,11 +48,6 @@ public class TvShowsActivity extends AppCompatActivity implements TvShowAdapter.
         loadFirstPage();
     }
 
-    private void loadFirstPage() {
-        progressDialog.show();
-        loadTvShow();
-    }
-
     private void buildProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
@@ -66,7 +59,7 @@ public class TvShowsActivity extends AppCompatActivity implements TvShowAdapter.
     private void initializeComponents() {
         buildProgressDialog();
 
-        current_page = 0;
+        current_page = 1;
         hasMore = true;
         tvShowInfoList = new ArrayList<>();
         tvShowAdapter = new TvShowAdapter(getBaseContext(), tvShowInfoList, this);
@@ -93,6 +86,11 @@ public class TvShowsActivity extends AppCompatActivity implements TvShowAdapter.
         recyclerView.setAdapter(tvShowAdapter);
     }
 
+    private void loadFirstPage() {
+        progressDialog.show();
+        loadTvShow();
+    }
+
     private void addFooter() {
         tvShowInfoList.add(null);
 
@@ -106,7 +104,7 @@ public class TvShowsActivity extends AppCompatActivity implements TvShowAdapter.
 
 
     private void loadTvShow() {
-        Call<ResponseTvShows> call = ApiUtils.getApiService().getTvShows(ApiService.API_KEY, "1");
+        Call<ResponseTvShows> call = ApiUtils.getApiService().getTvShows(ApiService.API_KEY, Integer.toString(current_page));
 
         call.enqueue(new Callback<ResponseTvShows>() {
             @Override
@@ -117,14 +115,14 @@ public class TvShowsActivity extends AppCompatActivity implements TvShowAdapter.
                     List<TVShowInfo> list = response.body().getResults();
                     processResults(list);
                 } else {
-                    ResponseError error = ErrorUtils.parseError(response);
+                    processError();
                 }
-
             }
 
             @Override
             public void onFailure(Call<ResponseTvShows> call, Throwable t) {
                 progressDialog.dismiss();
+                processError();
             }
         });
 
@@ -135,6 +133,26 @@ public class TvShowsActivity extends AppCompatActivity implements TvShowAdapter.
             processFirstPage(list);
         } else {
             processPage(list);
+        }
+        updateValues(list.size());
+        scrollListener.loadFinished();
+    }
+
+    private void processError() {
+        if(hasFooter()) {
+            removeFooter();
+        }
+    }
+
+    private boolean hasFooter() {
+        return !tvShowInfoList.isEmpty() &&  tvShowInfoList.get(tvShowInfoList.size() - 1) == null;
+    }
+
+    private void updateValues(int size) {
+        if(size == 0) {
+            hasMore = false;
+        } else {
+            current_page++;
         }
     }
 
@@ -160,7 +178,7 @@ public class TvShowsActivity extends AppCompatActivity implements TvShowAdapter.
     }
 
     private boolean isFirstPage() {
-        return current_page == 0;
+        return current_page == 1;
     }
 
     @Override
